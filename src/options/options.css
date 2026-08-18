@@ -1,0 +1,48 @@
+:root {
+  --wc-bg: #ffffff; --wc-fg: #1c1f23; --wc-muted: #5c636e;
+  --wc-border: #e2e5ea; --wc-accent: #2f6df6; --wc-ok: #1a7f37;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wc-bg: #1b1d21; --wc-fg: #e6e8eb; --wc-muted: #9aa1ab;
+    --wc-border: #2f333a; --wc-accent: #4f86ff; --wc-ok: #5ecb7a;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; color: var(--wc-fg); background: var(--wc-bg);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.wc-options { max-width: 560px; margin: 0 auto; padding: 32px 24px; }
+h1 { font-size: 20px; margin: 0 0 4px; }
+.wc-note { color: var(--wc-muted); margin: 0 0 24px; }
+.wc-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; max-width: 320px; }
+.wc-field label { font-weight: 600; }
+select {
+  font: inherit; color: var(--wc-fg); background: var(--wc-bg);
+  border: 1px solid var(--wc-border); border-radius: 8px; padding: 8px 10px;
+}
+.wc-check { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; cursor: pointer; }
+.wc-check input { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--wc-accent); }
+.wc-saved { min-height: 1.3em; color: var(--wc-ok); font-size: 13px; margin-top: 18px; }
+.wc-subhead { font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: var(--wc-muted); margin: 26px 0 8px; }
+
+/* Tabs */
+.wc-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--wc-border); margin: 18px 0 22px; }
+.wc-tab {
+  font: inherit; font-weight: 600; color: var(--wc-muted);
+  background: none; border: none; border-bottom: 2px solid transparent;
+  padding: 8px 14px; margin-bottom: -1px; border-radius: 0; cursor: pointer;
+}
+.wc-tab:hover { color: var(--wc-fg); }
+.wc-tab.is-active { color: var(--wc-accent); border-bottom-color: var(--wc-accent); }
+.wc-panel.is-hidden { display: none; }
+.wc-panel input[type="file"] { font: inherit; color: var(--wc-fg); }
+
+/* Primary action buttons (Split into pages) — tabs opt out via their own rule above. */
+#opt-resplit-go {
+  font: inherit; font-weight: 600; color: #fff; background: var(--wc-accent);
+  border: 0; border-radius: 8px; padding: 9px 16px; cursor: pointer;
+}
+#opt-resplit-go:disabled { opacity: 0.5; cursor: default; }
+:focus-visible { outline: 2px solid var(--wc-accent); outline-offset: 2px; }

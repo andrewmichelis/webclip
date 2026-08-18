@@ -1,0 +1,103 @@
+:root {
+  --wc-bg: #ffffff;
+  --wc-fg: #1c1f23;
+  --wc-muted: #5c636e;
+  --wc-border: #e2e5ea;
+  --wc-accent: #2f6df6;
+  --wc-accent-fg: #ffffff;
+  --wc-danger: #b3261e;
+  --wc-ok: #1a7f37;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wc-bg: #1b1d21;
+    --wc-fg: #e6e8eb;
+    --wc-muted: #9aa1ab;
+    --wc-border: #2f333a;
+    --wc-accent: #4f86ff;
+    --wc-accent-fg: #0b0d10;
+    --wc-danger: #ff6b60;
+    --wc-ok: #5ecb7a;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  width: 360px;
+  font: 13px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--wc-fg);
+  background: var(--wc-bg);
+}
+
+.wc { padding: 14px 16px 16px; }
+.wc-header { margin-bottom: 12px; }
+.wc-headrow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.wc-brandblock { display: flex; align-items: center; min-width: 0; }
+/* Brand + tool name share one line: KnackMentor wordmark, a thin divider, then WebClip. */
+.wc-brandline { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.wc-brand-sep { flex: none; width: 1px; height: 15px; background: var(--wc-border); }
+.wc-title { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: .2px; }
+/* The KnackMentor wordmark (their brand mark), kept small; brand colours, theme-aware. */
+.wc-km-logo {
+  flex: none; background: none; border: none; padding: 0; cursor: pointer;
+  font: 900 16px/1 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; letter-spacing: .2px;
+}
+.wc-km-logo:hover { filter: brightness(1.08); }
+.km-knack { color: #3560b0; }
+.km-mentor { color: #1f9b6e; }
+@media (prefers-color-scheme: dark) { .km-knack { color: #7aa2ff; } .km-mentor { color: #47e6b1; } }
+.wc-headicons { display: flex; align-items: center; gap: 2px; }
+.wc-icon {
+  flex: none; background: none; border: none; color: var(--wc-muted);
+  font-size: 15px; font-weight: 700; line-height: 1; width: 26px; height: 26px;
+  display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer;
+}
+.wc-icon:hover { color: var(--wc-fg); background: var(--wc-border); }
+.wc-icon svg { display: block; }
+.wc-source {
+  margin: 10px 0 0; color: var(--wc-muted); font-size: 12px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.wc-group { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--wc-border); }
+.wc-group:first-of-type { border-top: none; padding-top: 0; }
+.wc-group-title { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--wc-muted); }
+
+.wc-radio, .wc-check { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; }
+.wc-radio input, .wc-check input { margin: 0; width: 16px; height: 16px; accent-color: var(--wc-accent); }
+.wc-radio.is-disabled { opacity: .5; cursor: not-allowed; }
+.wc-soon { color: var(--wc-muted); font-style: normal; font-size: 11px; }
+
+.wc-row { display: flex; gap: 10px; }
+.wc-field { display: flex; flex-direction: column; gap: 4px; flex: 1; font-size: 11px; color: var(--wc-muted); }
+.wc-field select {
+  font: inherit; color: var(--wc-fg); background: var(--wc-bg);
+  border: 1px solid var(--wc-border); border-radius: 6px; padding: 6px 8px;
+}
+
+.wc-button {
+  width: 100%; margin-top: 16px; padding: 10px 12px;
+  font: inherit; font-weight: 600; color: var(--wc-accent-fg); background: var(--wc-accent);
+  border: none; border-radius: 8px; cursor: pointer;
+}
+.wc-button:hover { filter: brightness(1.05); }
+.wc-button:disabled { opacity: .55; cursor: not-allowed; }
+.wc-button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--wc-accent); outline-offset: 2px; }
+
+.wc-actions { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.wc-link {
+  display: block; flex: 1; margin: 0; padding: 6px; text-align: left;
+  background: none; border: none; color: var(--wc-accent); font: inherit; cursor: pointer;
+}
+.wc-link:hover { text-decoration: underline; }
+.wc-iconbtn {
+  flex: none; padding: 6px 10px; white-space: nowrap;
+  background: none; border: 1px solid var(--wc-border); border-radius: 8px;
+  color: var(--wc-accent); font: inherit; font-weight: 600; cursor: pointer;
+}
+.wc-iconbtn:hover { background: var(--wc-border); }
+
+.wc-status { margin: 12px 0 0; min-height: 1.2em; color: var(--wc-muted); font-size: 12px; }
+.wc-status.is-error { color: var(--wc-danger); }
+.wc-status.is-ok { color: var(--wc-ok); }

@@ -1,0 +1,29 @@
+# Build output
+/dist/
+/build/
+*.zip
+*.crx
+*.pem
+
+# Dependencies
+/node_modules/
+
+# Editor / OS
+.DS_Store
+.vscode/
+*.swp
+
+# Local env / secrets (never commit)
+.env
+.env.*
+*.local
+
+# Temporary capture output / scratch (never commit — personal captures, throwaway)
+/.tmp/
+*.tmp
+
+# Test artifacts
+/coverage/
+/playwright-report/
+/test-results/
+dist-test/

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WebClip — Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main class="wc-options">
+    <h1>WebClip</h1>
+
+    <nav class="wc-tabs" role="tablist" aria-label="Sections">
+      <button type="button" class="wc-tab is-active" id="tab-settings" role="tab" aria-selected="true" aria-controls="panel-settings">Settings</button>
+      <button type="button" class="wc-tab" id="tab-split" role="tab" aria-selected="false" aria-controls="panel-split">Split a PDF</button>
+    </nav>
+
+    <section class="wc-panel" id="panel-settings" role="tabpanel" aria-labelledby="tab-settings">
+      <p class="wc-note">Capture preferences. Stored locally in your browser and applied to every capture.</p>
+
+      <div class="wc-field">
+        <label for="opt-paper">Default paper size</label>
+        <select id="opt-paper">
+          <option value="AUTO">Auto (one continuous page — best for screen)</option>
+          <option value="A4">A4 (printable, splits into pages)</option>
+          <option value="LETTER">Letter (printable, splits into pages)</option>
+        </select>
+      </div>
+
+      <div class="wc-field">
+        <label for="opt-format">Image format</label>
+        <select id="opt-format">
+          <option value="png">PNG (lossless, best for text)</option>
+          <option value="jpeg">JPEG (smaller, best for photos)</option>
+        </select>
+      </div>
+
+      <label class="wc-check">
+        <input type="checkbox" id="opt-declutter" />
+        <span>Declutter pages before capture (hide ads, cookie bars, sticky widgets)</span>
+      </label>
+
+      <label class="wc-check">
+        <input type="checkbox" id="opt-links" />
+        <span>Keep clickable links (carry the page's links into the PDF)</span>
+      </label>
+
+      <label class="wc-check">
+        <input type="checkbox" id="opt-stamp" />
+        <span>Stamp header &amp; footer on captures (title, URL, capture time, page number)</span>
+      </label>
+
+      <h3 class="wc-subhead">Evidence</h3>
+      <label class="wc-check">
+        <input type="checkbox" id="opt-evidence" />
+        <span>Enable Evidence Mode by default (URL, time, checksum sidecar)</span>
+      </label>
+      <label class="wc-check">
+        <input type="checkbox" id="opt-checksum" />
+        <span>Save a checksum sidecar (.sha256) next to the PDF</span>
+      </label>
+
+      <h3 class="wc-subhead">Advanced</h3>
+      <label class="wc-check">
+        <input type="checkbox" id="opt-debug-tiles" />
+        <span>Debug: also save the raw capture tiles (for troubleshooting stitching)</span>
+      </label>
+
+      <p class="wc-saved" id="opt-saved" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="wc-panel is-hidden" id="panel-split" role="tabpanel" aria-labelledby="tab-split">
+      <p class="wc-note">
+        Turn a saved capture into printable pages. Pick a one-page PDF (an “Auto” capture) and WebClip
+        re-paginates it into A4 or Letter, breaking at clean gaps between lines and paragraphs.
+      </p>
+      <div class="wc-field">
+        <label for="opt-resplit-file">PDF to split</label>
+        <input type="file" id="opt-resplit-file" accept="application/pdf,.pdf" />
+      </div>
+      <div class="wc-field">
+        <label for="opt-resplit-paper">Page size</label>
+        <select id="opt-resplit-paper">
+          <option value="A4">A4</option>
+          <option value="LETTER">Letter</option>
+        </select>
+      </div>
+      <button type="button" id="opt-resplit-go" disabled>Split into pages</button>
+      <p class="wc-saved" id="opt-resplit-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <script type="module" src="options.js"></script>
+</body>
+</html>

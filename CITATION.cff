@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use WebClip, please cite it as below."
+title: "WebClip"
+abstract: >-
+  A privacy-first Chrome extension (Manifest V3) that captures the rendered active web page to a
+  screenshot-fidelity PDF: visible area or full scrollable page, one continuous page or printable
+  A4/Letter with content-aware page breaks, clickable links, and an optional local-only evidence
+  checksum. Everything runs on the user's device with a minimal permission set and no network egress.
+type: software
+authors:
+  - family-names: Michelis
+    given-names: Andrew P.
+    email: andrew.michelis@knackmentor.com
+    affiliation: KnackMentor
+version: 1.0.0
+date-released: 2026-08-18
+license: Apache-2.0
+repository-code: "https://github.com/andrewmichelis/webclip"
+url: "https://knackmentor.com"
+keywords:
+  - chrome-extension
+  - manifest-v3
+  - screenshot
+  - pdf
+  - privacy
+  - web-capture

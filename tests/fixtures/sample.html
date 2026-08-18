@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WebClip Harness Fixture</title>
+<style>
+  body { font: 15px/1.6 system-ui, sans-serif; color: #1c1f23; background: #fff; max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+  h1, h2 { line-height: 1.25; }
+  .bubble { background: #dbeafe; border-radius: 12px; padding: 14px 18px; margin: 18px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+  th, td { border: 1px solid #d0d5dd; padding: 8px 10px; text-align: left; }
+  .spacer { height: 3000px; }
+  p { margin: 14px 0; }
+</style>
+</head>
+<body>
+  <h1>WebClip headless harness fixture</h1>
+  <p>This deterministic page exercises the capture pipeline: paragraphs, a coloured bubble, a table,
+     and links. It is tall enough to force multiple A4 pages so page-break quality is checked.</p>
+
+  <p>Visit <a href="https://knackmentor.com/">KnackMentor</a> or the
+     <a href="https://github.com/andrewmichelis/webclip">source repository</a>. Email
+     <a href="mailto:hello@example.com">hello@example.com</a>. This
+     <a href="#section-2">in-page anchor</a> and this
+     <a href="javascript:void(0)">script link</a> must NOT become PDF links.</p>
+
+  <div class="bubble">
+    <strong>A coloured bubble.</strong> The content-aware break logic must never split this block or a
+    table across a page boundary when it can avoid it, and must never break through a line of text.
+  </div>
+
+  <h2>A table</h2>
+  <table>
+    <thead><tr><th>Field</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Paper</td><td>A4 / Letter / Auto</td></tr>
+      <tr><td>Links</td><td><a href="https://example.com/x)/S/JavaScript/JS(app.alert(1))(">an adversarial href</a></td></tr>
+      <tr><td>Break rule</td><td>whitespace only, background-relative</td></tr>
+    </tbody>
+  </table>
+
+  <div class="spacer"></div>
+
+  <h2 id="section-2">Section two (below the fold)</h2>
+  <p>More text after a tall spacer, so the capture must scroll-and-tile and stitch cleanly. The
+     link to <a href="https://knackmentor.com/about">the About page</a> sits down here.</p>
+  <div class="bubble">Another bubble near the bottom to test breaks and stitching at the tail.</div>
+  <p>End of fixture.</p>
+</body>
+</html>
