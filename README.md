@@ -76,7 +76,7 @@ This is the part that matters most, so it is worth being precise.
 
 ## Install
 
-> **Status:** Engine A (visual capture to PDF) is feature-complete, security-reviewed, and verified. A Chrome Web Store listing is being prepared. Until then, you can run it from source in under a minute.
+> **Install:** WebClip is on the **[Chrome Web Store](https://chromewebstore.google.com/detail/webclip/dafdhiehgfnehhbcofbepgcfcgkgdcce)** — one click, no build needed. Prefer to build it yourself? Run it from source in under a minute:
 
 ```bash
 git clone https://github.com/andrewmichelis/webclip.git
