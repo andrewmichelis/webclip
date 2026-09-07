@@ -17,7 +17,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache 2.0" /></a>
   <img src="https://img.shields.io/badge/Chrome-Manifest_V3-4f86ff" alt="Chrome Manifest V3" />
   <img src="https://img.shields.io/badge/privacy-local--only-1a7f37" alt="Privacy: local-only" />
-  <img src="https://img.shields.io/badge/tests-51%20unit%20%2B%20headless-1a7f37" alt="Tested" />
+  <img src="https://img.shields.io/badge/tests-76%20unit%20%2B%20headless-1a7f37" alt="Tested" />
 </p>
 
 <p align="center">
@@ -43,10 +43,11 @@ WebClip takes a different path. It captures the pixels the browser actually rend
 
 ## What you can do
 
-- **Capture the visible area, or the entire scrollable page.** WebClip scrolls and stitches long pages seamlessly, including inner panels in web apps like chat feeds, mail, and docs.
+- **Capture the visible area, or the entire scrollable page.** WebClip scrolls and stitches long pages seamlessly, including inner panels in web apps like chat feeds, mail, and docs, and lessons that render inside a same-origin iframe (SCORM / Articulate course players).
 - **Choose your output.** *Auto* gives you one continuous page that reads like the screen. *A4* or *Letter* gives you print-ready pages with **content-aware breaks** that split at the whitespace between paragraphs and never cut through a line, a table row, or a coloured bubble.
 - **Keep your links.** Real links on the page (http, mailto, tel) travel into the PDF as genuine clickable annotations.
 - **Re-paginate later.** Turn a saved *Auto* capture into printable A4 or Letter pages after the fact, as a clean PDF-to-PDF split.
+- **Mark exactly what you want.** Beyond one section, arm Mark mode and click the parts you care about across a long page, expanding accordions or switching tabs as you go. WebClip assembles the marked pieces into one clean PDF in the order you picked. Capture the whole page *plus* your marks, or only the marks. A bundled offline Help page walks through the marking flow with worked examples.
 - **Capture just one section** with the section picker, and add an optional header/footer stamp (title, URL, capture time, page number).
 - **Evidence Mode** records the URL, title, capture time, and a detached SHA-256 checksum alongside the file. The semantics stay honest: it is a local clock and a local hash, never dressed up as a trusted timestamp.
 - **Declutter for capture.** Ads, cookie bars, and sticky widgets are suppressed in the captured output using page heuristics, with no network filtering and no broad permissions.
@@ -91,7 +92,7 @@ Then open `chrome://extensions`, turn on **Developer mode**, choose **Load unpac
 
 WebClip is a Manifest V3 extension with a shared capture core and pluggable output engines. The core resolves the active tab, prepares and restores the page, and handles decluttering and section selection. The PDF engine composites the captured tiles and lays them out, either as one continuous page or as printable pages with content-aware breaks. It is a screenshot pipeline, faithful to the rendered page, not a print-to-PDF re-render.
 
-Quality is verified, not asserted: **51 unit tests** plus a **headless browser harness** that drives a real capture end to end and checks the output PDF (page geometry, break placement, and that every link is both injection-safe and actually clickable). That harness runs before any release.
+Quality is verified, not asserted: **76 unit tests** plus a **headless browser harness** that drives a real capture end to end and checks the output PDF (page geometry, break placement, and that every link is both injection-safe and actually clickable). That harness runs before any release.
 
 For the full picture, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
@@ -105,8 +106,9 @@ Found it useful? A star on this repo genuinely helps, and feedback is always wel
 
 | Stage | Scope |
 |---|---|
-| **v1** | Engine A: visible and full-page capture, one-page and printable multi-page PDF, page restoration, clickable links, section picker, Evidence Mode. |
-| **v1.x** | Engine B: extract the main content to clean Markdown, pull images through as real files, and hand off to [markdown-desk](https://github.com/andrewmichelis/markdown-desk). |
+| **v1.0** ✅ | Engine A: visible and full-page capture, one-page and printable multi-page PDF, page restoration, clickable links, section picker, Evidence Mode. |
+| **v1.1** ✅ *(this release)* | Mark-and-assemble capture (mark sections, tabs, and accordions across a page and splice them in place, in order); full capture of lessons inside same-origin iframes (SCORM / Articulate players) with collapsed sections expanded; bundled offline Help; and substantially more faithful long-page stitching. |
+| **v1.x** *(next)* | Engine B: extract the main content to clean Markdown, pull images through as real files, and hand off to [markdown-desk](https://github.com/andrewmichelis/markdown-desk). |
 | **v2** | Advanced capture engine (Chrome DevTools Protocol), optional trusted timestamping, MHTML archival. |
 
 ## Contributing

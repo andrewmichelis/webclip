@@ -1,4 +1,4 @@
-// Stable error codes. Production UI shows `message`, never raw stack traces.
+// Stable error codes (handover §44). Production UI shows `message`, never raw stack traces.
 
 export type CaptureErrorCode =
   | 'NO_ACTIVE_TAB'

@@ -18,7 +18,7 @@ All processing happens locally in your browser. WebClip does **not**:
 
 ## What WebClip stores
 
-- **Preferences** (paper size, image format, and similar settings) are stored in your browser's extension storage so they persist between sessions.
+- **Preferences** (paper size, image format, and similar settings) are stored in your browser's extension storage so they persist between sessions. These are small settings only — never captured images, URLs, or page content. If you have Chrome Sync enabled, Chrome may sync these small preferences across your own signed-in browsers; that is browser-managed sync of settings, not WebClip sending anything anywhere.
 - **Transient capture state** may be held briefly in session storage while a capture is running, and is cleared afterward.
 
 Captured image data is held in memory only for as long as it takes to produce your file, then released.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# release-check.sh — WebClip release gate (maturity check). One command.
-# Exits non-zero on ANY failure so it can gate a public release / CI.
+# release-check.sh — WebClip release gate (RT-18 maturity check). One command, no model / no operator
+# (SE-28). Exits non-zero on ANY failure so it can gate the release-public ceremony / CI.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -10,8 +10,17 @@ step "typecheck"; npm run --silent typecheck
 step "unit tests"; npm run --silent test
 step "lint"; npm run --silent lint
 step "build (dist/)"; npm run --silent build
+step "supply-chain integrity (lockfile + exact pins)"
+node -e '
+  const fs = require("fs");
+  if (!fs.existsSync("package-lock.json")) { console.error("  FAIL package-lock.json missing (npm ci reproducibility)"); process.exit(1); }
+  const deps = require("./package.json").dependencies || {};
+  const bad = Object.entries(deps).filter(([, v]) => !/^\d+\.\d+\.\d+$/.test(String(v)));
+  if (bad.length) { console.error("  FAIL runtime deps must be EXACT-pinned (no ^/~/range):", JSON.stringify(bad)); process.exit(1); }
+  console.log("  ok lockfile present; runtime deps exact-pinned =", JSON.stringify(deps));
+'
 step "security audit (production dependencies)"; npm audit --omit=dev
-step "shipped manifest permissions (must be exactly the minimal permission set)"
+step "shipped manifest permissions (must be exactly the ARCH-WC-04 set)"
 node -e '
   const m = require("./dist/manifest.json");
   const got = JSON.stringify(m.permissions || []);

@@ -1,6 +1,6 @@
 // Download helper. MV3 service workers have no URL.createObjectURL, so we hand
 // chrome.downloads a base64 data: URL (fine for single-page captures; an offscreen
-// document for large multi-page output is a later consideration).
+// document for large multi-page output is a later consideration, ARCH-WC-04).
 
 function bytesToBase64(bytes: Uint8Array): string {
   let bin = '';

@@ -1,4 +1,4 @@
-// Settings persistence. Small preferences only, in chrome.storage.sync (never large binaries).
+// Settings persistence. Small preferences only, in chrome.storage.sync (never large binaries §10).
 import { DEFAULT_SETTINGS } from './types.js';
 import type { UserSettings, PaperSize, Orientation, ImageFormat, CaptureMode } from './types.js';
 
@@ -10,7 +10,7 @@ const bool = (v: unknown, fallback: boolean): boolean => (typeof v === 'boolean'
 
 /**
  * Coerce an untrusted settings object to a valid UserSettings — every field validated/clamped against
- * DEFAULT_SETTINGS. Defense in depth for the START_CAPTURE message path: the message
+ * DEFAULT_SETTINGS. Defense in depth for the START_CAPTURE message path (security T-2): the message
  * sender is always the extension's own context, but a malformed payload must never reach the renderer.
  */
 export function coerceSettings(raw: unknown): UserSettings {

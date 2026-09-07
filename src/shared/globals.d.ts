@@ -14,12 +14,23 @@ declare var __webclipController:
       measure(): import('./types.js').PageMetrics;
       scrollContext(): import('./types.js').ScrollContext;
       scrollTo(x: number, y: number): { scrollX: number; scrollY: number };
-      setFixedHidden(hidden: boolean): number;
+      setFixedHidden(hidden: boolean, barLikeOnly?: boolean): number;
       declutter(on: boolean): void;
       startPick(): void;
       clearPick(): void;
       hasPick(): boolean;
+      startMark(): void;
+      cancelMark(): void;
+      useMarkedBlockAsScroller(): boolean;
+      clearForcedScroller(): void;
+      regionInfo(extraOverlapCss?: number): import('./types.js').RegionInfo | null;
+      regionPositionTile(i: number): import('./types.js').RegionTilePos | null;
       collectLinks(): import('./types.js').PageLink[];
+      collectRegionLinks(): import('./types.js').PageLink[];
+      measureTopFrozenCss(): Promise<number>;
+      collectAnchors(): import('./types.js').Anchor[];
+      collectTabPanels(): import('./types.js').TabPanelExtent[];
+      modalBands(): import('./types.js').ModalBands | null;
       restore(): void;
     }
   | undefined;

@@ -1,6 +1,7 @@
-// Popup controller (M1): resolve the active tab via the service worker, reflect its capture
-// capability, and wire the capture action to the (not-yet-implemented) engine contract.
-// Untrusted page-derived strings are rendered with textContent only (XSS-safe).
+// Popup controller: resolve the active tab via the service worker, reflect its capture capability,
+// and drive the capture actions (Capture & Save, Full page + mark, Mark only, Split PDF) over the
+// START_CAPTURE / SNAPSHOT message contract.
+// Untrusted page-derived strings are rendered with textContent only (security §39, ARCH-WC-04).
 
 import { DEFAULT_SETTINGS } from '../shared/types.js';
 import { loadSettings } from '../shared/settings.js';
@@ -158,11 +159,33 @@ async function onCapture(): Promise<void> {
   }
 }
 
+// Manual snapshot & stitch (WC-M10): start the session, then close the popup so the user can scroll,
+// open sections, and drive the floating toolbar (Snapshot / Done / Cancel) on the page itself.
+// G1: carry the popup's per-capture Paper/Layout into the mark/atlas modes so the assembled PDF honours the
+// same choice as Capture & Save (not only the saved options).
+function perCapturePaperLayout(): { paperSize: PaperSize; orientation: Orientation } {
+  return { paperSize: el<HTMLSelectElement>('wc-paper').value as PaperSize, orientation: el<HTMLSelectElement>('wc-layout').value as Orientation };
+}
+
+async function onSnapshot(): Promise<void> {
+  await send<{ ok: boolean }>({ type: 'SNAPSHOT_START', ...perCapturePaperLayout() });
+  window.close();
+}
+
+async function onAtlas(): Promise<void> {
+  // Composite capture (WC-M12): the base full-page capture runs in the service worker; close the popup so
+  // the toolbar takes over once it's ready.
+  void send<{ ok: boolean }>({ type: 'SNAPSHOT_START_ATLAS', ...perCapturePaperLayout() });
+  window.close();
+}
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && picking) void stopPicking(); // cancel pick from the popup too
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+  const ver = document.getElementById('wc-version');
+  if (ver) ver.textContent = `v${__VERSION__}`; // build-time constant from package.json
   el<HTMLButtonElement>('wc-capture').addEventListener('click', () => {
     if (captureActive) {
       void send<{ ok: boolean }>({ type: 'CANCEL_CAPTURE', jobId: '' });
@@ -172,10 +195,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   el<HTMLButtonElement>('wc-pick').addEventListener('click', () => { void onPick(); });
+  el<HTMLButtonElement>('wc-snapshot').addEventListener('click', () => { void onSnapshot(); });
+  el<HTMLButtonElement>('wc-atlas').addEventListener('click', () => { void onAtlas(); });
   el<HTMLButtonElement>('wc-gear').addEventListener('click', () => chrome.runtime.openOptionsPage());
   const openTab = (url: string): void => void chrome.tabs.create({ url });
   const GITHUB_URL = 'https://github.com/andrewmichelis/webclip';
-  el<HTMLButtonElement>('wc-help').addEventListener('click', () => openTab(`${GITHUB_URL}#readme`)); // full help + source
+  el<HTMLButtonElement>('wc-help').addEventListener('click', () => openTab(chrome.runtime.getURL('help.html'))); // bundled offline help page
   el<HTMLButtonElement>('wc-github').addEventListener('click', () => openTab(GITHUB_URL));
   el<HTMLButtonElement>('wc-brand').addEventListener('click', () => openTab('https://knackmentor.com/webclip/'));
   el<HTMLButtonElement>('wc-resplit').addEventListener('click', () => {

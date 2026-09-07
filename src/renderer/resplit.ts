@@ -6,7 +6,7 @@
 // SAME clean gaps as the direct paginated path; other PDFs fall back to fixed bands.
 import { PDFDocument, pushGraphicsState, popGraphicsState, rectangle, clip, endPath } from 'pdf-lib';
 import { PRODUCT_NAME, VERSION } from '../shared/constants.js';
-import { parseBreakProfile, inkFromGaps, planBands } from '../shared/resplit-plan.js';
+import { parseBreakProfile, inkFromGaps, planBands, bandsToSourcePt, type BreakProfile } from '../shared/resplit-plan.js';
 
 const MARGIN_PT = 18;
 const TOP_EXTRA_PT = 14; // extra breathing room at the top of every page (keep in step with pdf-renderer)
@@ -50,7 +50,7 @@ export async function resplitPdfToPrintable(
   const srcPages = src.getPages();
   let pageCount = 0;
   let smart = false;
-  const MAX_OUTPUT_PAGES = 2000; // guard against a pathological (very tall) source PDF fanning out
+  const MAX_OUTPUT_PAGES = 2000; // guard against a pathological (very tall) source PDF fanning out (security T-3)
 
   for (let sp = 0; sp < srcPages.length; sp++) {
     const srcPage = srcPages[sp];
@@ -61,14 +61,32 @@ export async function resplitPdfToPrintable(
     const scale = contentW / W; // fit source width to the printable content width
     const bandSrcPt = contentH / scale; // source pt that fills one page's content height
 
+    // The profile to use for THIS source page: for a MULTI-PAGE WebClip source (AUTO overflow > ~200in),
+    // slice the global gaps to this page's content range and use its own pt geometry; for a single-page
+    // source, the whole profile. Either way we get content-aware breaks (source-page boundaries are already
+    // on whitespace, so no A4 band crosses one).
+    let activeProfile: BreakProfile | null = null;
+    if (profile && profile.pages && profile.pages.length === srcPages.length && profile.h > 0) {
+      const meta = profile.pages[sp];
+      const localGaps: [number, number][] = profile.gaps
+        .filter(([gs, gl]) => gs + gl > meta.s && gs < meta.s + meta.h)
+        .map(([gs, gl]) => [Math.max(0, gs - meta.s), gl]);
+      activeProfile = { h: meta.h, gaps: localGaps, contentTopPt: meta.ct, contentHeightPt: meta.ch };
+    } else if (profile && srcPages.length === 1 && profile.h > 0) {
+      activeProfile = profile;
+    }
     // Boundary offsets from the source top, in source pt (top-down).
     let boundsPt: number[];
-    if (profile && srcPages.length === 1 && profile.h > 0) {
-      const ptPerPx = H / profile.h;
+    if (activeProfile) {
+      // Map content-px -> source-pt via the CONTENT geometry (excludes the stamp header/footer band, if
+      // any). Using the full page height here mis-maps every break by the header band and slices content.
+      const contentHeightPt = activeProfile.contentHeightPt ?? H;
+      const ptPerPx = contentHeightPt / activeProfile.h;
       const pageContentPx = Math.max(1, Math.round(bandSrcPt / ptPerPx));
       const lookback = Math.max(8, Math.floor(pageContentPx * BREAK_LOOKBACK_FRACTION));
-      const ink = inkFromGaps(profile.h, profile.gaps);
-      boundsPt = planBands(profile.h, pageContentPx, lookback, ACTIVITY_BLANK_THRESHOLD, ink).map((px) => px * ptPerPx);
+      const ink = inkFromGaps(activeProfile.h, activeProfile.gaps);
+      const px = planBands(activeProfile.h, pageContentPx, lookback, ACTIVITY_BLANK_THRESHOLD, ink);
+      boundsPt = bandsToSourcePt(px, activeProfile, H); // offsets by the header band; slices only the content region
       smart = true;
     } else {
       boundsPt = [0];

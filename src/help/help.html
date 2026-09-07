@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WebClip — How to capture</title>
+<style>
+  :root {
+    --bg: #f7f8f7;
+    --card: #ffffff;
+    --ink: #16181c;
+    --muted: #5b6472;
+    --line: #e3e7e4;
+    --accent: #16a34a;      /* WebClip green — the Mark button */
+    --accent-ink: #0f7a34;
+    --danger: #dc2626;      /* callouts / the armed "Cancel mark" state */
+    --chip: #eef4ef;
+    --code-bg: #eef1ee;
+    --shadow: 0 1px 2px rgba(20,22,26,.06), 0 6px 20px rgba(20,22,26,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1311; --card: #161b18; --ink: #e9edea; --muted: #9aa4ac;
+      --line: #26302b; --accent: #34d17f; --accent-ink: #7ee6ac; --danger: #f87171;
+      --chip: #1b2420; --code-bg: #1b211d; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1311; --card: #161b18; --ink: #e9edea; --muted: #9aa4ac;
+    --line: #26302b; --accent: #34d17f; --accent-ink: #7ee6ac; --danger: #f87171;
+    --chip: #1b2420; --code-bg: #1b211d; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] {
+    --bg: #f7f8f7; --card: #ffffff; --ink: #16181c; --muted: #5b6472;
+    --line: #e3e7e4; --accent: #16a34a; --accent-ink: #0f7a34; --danger: #dc2626;
+    --chip: #eef4ef; --code-bg: #eef1ee; --shadow: 0 1px 2px rgba(20,22,26,.06), 0 6px 20px rgba(20,22,26,.06);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.6 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 40px 20px 80px; }
+  header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  header .logo {
+    width: 34px; height: 34px; border-radius: 8px; background: var(--accent);
+    display: grid; place-items: center; color: #fff; font-size: 19px; flex: none;
+  }
+  h1 { font-size: 24px; margin: 0; letter-spacing: -.01em; }
+  .lede { color: var(--muted); margin: 4px 0 28px; font-size: 15.5px; }
+  h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--accent-ink); margin: 34px 0 12px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 20px 22px; }
+  .card + .card { margin-top: 14px; }
+  .steps { list-style: none; counter-reset: s; margin: 0; padding: 0; }
+  .steps > li { position: relative; padding: 14px 0 14px 46px; border-top: 1px solid var(--line); }
+  .steps > li:first-child { border-top: 0; }
+  .steps > li::before {
+    counter-increment: s; content: counter(s);
+    position: absolute; left: 0; top: 12px; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--chip); color: var(--accent-ink); font-weight: 700; font-size: 14px;
+    display: grid; place-items: center;
+  }
+  .steps b { color: var(--ink); }
+  kbd {
+    font: 600 12.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--code-bg); border: 1px solid var(--line); border-bottom-width: 2px;
+    border-radius: 6px; padding: 3px 7px; color: var(--ink); white-space: nowrap;
+  }
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12.5px; font-weight: 600; }
+  .pill.green { background: var(--accent); color: #fff; }
+  .pill.red { background: var(--danger); color: #fff; }
+  .callout { color: var(--danger); font-weight: 600; }
+  p { margin: 10px 0; }
+  .muted { color: var(--muted); }
+  figure { margin: 8px 0 2px; }
+  figcaption { color: var(--muted); font-size: 13px; margin-top: 8px; }
+  svg { max-width: 100%; height: auto; display: block; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 620px) { .two { grid-template-columns: 1fr; } }
+  .keys { width: 100%; border-collapse: collapse; }
+  .keys td { padding: 9px 8px; border-top: 1px solid var(--line); vertical-align: top; }
+  .keys tr:first-child td { border-top: 0; }
+  .keys td:first-child { width: 190px; white-space: nowrap; }
+  footer { color: var(--muted); font-size: 13px; margin-top: 40px; text-align: center; }
+  a { color: var(--accent-ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">✂️</div>
+    <h1>WebClip — how to capture</h1>
+  </header>
+  <p class="lede">Save any page — even course players and infinite feeds — as a clean, self-contained PDF. Three ways to do it: pick the one that fits the page.</p>
+
+  <h2>Three ways to capture — and when to use each</h2>
+  <div class="card">
+    <figure>
+      <svg viewBox="0 0 620 150" role="img" aria-label="The three capture buttons">
+        <rect x="1" y="1" width="618" height="148" rx="10" fill="none" stroke="var(--line)"/>
+        <rect x="16" y="16" width="588" height="42" rx="9" fill="#2563eb"/>
+        <text x="310" y="35" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="system-ui">📄 Capture &amp; Save PDF</text>
+        <text x="310" y="51" text-anchor="middle" fill="#e6efff" font-size="12" font-family="system-ui">the whole page, one click — the everyday default</text>
+        <rect x="16" y="66" width="290" height="66" rx="9" fill="var(--accent)"/>
+        <text x="161" y="92" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="system-ui">📄 Full page</text>
+        <text x="161" y="111" text-anchor="middle" fill="#eafff1" font-size="12" font-family="system-ui">automated + mark</text>
+        <rect x="314" y="66" width="290" height="66" rx="9" fill="#6d28d9"/>
+        <text x="459" y="92" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="system-ui">🎯 Mark only</text>
+        <text x="459" y="111" text-anchor="middle" fill="#efe9ff" font-size="12" font-family="system-ui">manual · across pages</text>
+      </svg>
+    </figure>
+    <p><span class="pill" style="background:#2563eb;color:#fff">📄 Capture &amp; Save PDF</span> &nbsp;The everyday button in the popup. Grabs the <b>whole scrollable page</b> in one click — top to bottom, inner panels and all — and saves it. <b>Ideal for:</b> articles, dashboards, receipts, chat threads, documentation — anything where <b>everything you need is already on the page</b>.</p>
+    <p><span class="pill green">📄 Full page</span> <span class="muted">(automated + mark)</span> &nbsp;First captures the whole page automatically as a <b>base</b>, then lets you go back into the <b>same page</b> and <b>mark the states a single scroll can’t reach</b> — a collapsed <b>accordion</b>, a different <b>tab</b>. Each marked view is spliced into the base <b>at its own place, in order</b>. <b>Ideal for:</b> course players (SCORM / Rise), docs with accordions or tabbed panels — <b>the full page <i>plus</i> the content hidden behind clicks</b>.</p>
+    <p><span class="pill" style="background:#6d28d9;color:#fff">🎯 Mark only</span> &nbsp;<b>No automatic base</b> — you mark sections by hand and they’re stacked into one PDF, in the order you mark them. The session <b>persists across pages/lessons</b>: keep marking as you move through a course, then press <b>Done</b> for one multi-page PDF. <b>Ideal for:</b> a <b>custom cut</b> of specific sections, when the automatic full-page capture doesn’t suit a page, or when you simply <b>don’t need the whole page</b> — only a few parts.</p>
+    <p class="muted">All three save a self-contained PDF on your device — nothing is uploaded. <b>Full page</b> and <b>Mark only</b> share the exact same marking tool (below); they differ only in whether a full-page base is captured first.</p>
+  </div>
+
+  <h2>Marking a section — the 3 presses</h2>
+  <div class="card">
+    <figure>
+      <svg viewBox="0 0 620 210" role="img" aria-label="Marking flow: a dashed outline follows your cursor, a click selects it, a second m captures">
+        <!-- mock page -->
+        <rect x="1" y="1" width="618" height="208" rx="10" fill="none" stroke="var(--line)"/>
+        <rect x="24" y="22" width="380" height="18" rx="4" fill="var(--line)"/>
+        <!-- selected section with solid outline -->
+        <rect x="20" y="58" width="420" height="96" rx="8" fill="var(--chip)" stroke="var(--accent)" stroke-width="3"/>
+        <rect x="36" y="74" width="230" height="12" rx="3" fill="var(--muted)" opacity=".55"/>
+        <rect x="36" y="96" width="360" height="10" rx="3" fill="var(--muted)" opacity=".35"/>
+        <rect x="36" y="114" width="330" height="10" rx="3" fill="var(--muted)" opacity=".35"/>
+        <rect x="36" y="132" width="180" height="10" rx="3" fill="var(--muted)" opacity=".35"/>
+        <!-- floating label -->
+        <rect x="20" y="40" width="330" height="20" rx="5" fill="var(--accent)"/>
+        <text x="30" y="54" fill="#fff" font-size="11.5" font-family="system-ui">✓ selected · press m (or click/Enter) to capture · ↑/↓ resize</text>
+        <!-- red callout -->
+        <path d="M470 106 L446 106" stroke="var(--danger)" stroke-width="2" fill="none" marker-end="url(#a)"/>
+        <defs><marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--danger)"/></marker></defs>
+        <text x="476" y="102" fill="var(--danger)" font-size="12.5" font-weight="700" font-family="system-ui">press</text>
+        <text x="476" y="119" fill="var(--danger)" font-size="12.5" font-weight="700" font-family="system-ui">m again</text>
+        <text x="476" y="136" fill="var(--danger)" font-size="12.5" font-weight="700" font-family="system-ui">to capture</text>
+      </svg>
+    </figure>
+    <ol class="steps">
+      <li><b>Arm it.</b> Press <kbd>m</kbd> or click <span class="pill green">🎯 Mark</span>. The button flips to <span class="pill red">✕ Cancel mark</span> so you know marking is on.</li>
+      <li><b>Aim &amp; select.</b> Move the cursor — a dashed outline <b>follows the block</b> under it. Click once (or press <kbd>m</kbd>) to <b>lock the selection</b> (it turns solid). Fine-tune with <kbd>↑</kbd> to grab a bigger block or <kbd>↓</kbd> for a smaller one.</li>
+      <li><b>Capture.</b> <span class="callout">Press <kbd>m</kbd> a second time</span> (or <kbd>Enter</kbd>, or click the selection). WebClip grabs the whole section — even the part below the fold — and the button returns to <span class="pill green">🎯 Mark</span> for the next one.</li>
+    </ol>
+    <p class="muted">Changed your mind? <kbd>Esc</kbd> or the <span class="pill red">✕ Cancel mark</span> button leaves marking without capturing.</p>
+  </div>
+
+  <h2>Worked example ① — an accordion</h2>
+  <div class="card">
+    <p>An <b>accordion</b> hides its content until you open it. WebClip captures what’s <b>on the page</b>, so the rule is simple: <b>open it first, then mark it.</b></p>
+    <figure>
+      <svg viewBox="0 0 860 360" role="img" aria-label="Open the accordion section, mark the open block, and it splices into the page in place.">
+        <rect x="0" y="0" width="860" height="360" rx="10" fill="#ffffff" stroke="var(--line)"/>
+        <text x="24" y="28" font-size="15" font-weight="700" fill="#0f7a34" font-family="system-ui">1 · Open the section</text>
+        <text x="316" y="28" font-size="15" font-weight="700" fill="#0f7a34" font-family="system-ui">2 · Mark the open block</text>
+        <text x="612" y="28" font-size="15" font-weight="700" fill="#0f7a34" font-family="system-ui">3 · It splices in place</text>
+        <rect x="24" y="44" width="252" height="286" rx="10" fill="#f7f8f7" stroke="#e3e7e4"/>
+        <g font-size="12" fill="#16181c" font-family="system-ui">
+          <rect x="40" y="62" width="220" height="34" rx="6" fill="#ffffff" stroke="#e3e7e4"/><text x="54" y="83">▸ Overview</text>
+          <rect x="40" y="104" width="220" height="34" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="2"/><text x="54" y="125" font-weight="700">▾ Logging levels</text>
+          <circle cx="243" cy="121" r="9" fill="#16a34a"/><path d="M239 121 l3 3 l6 -7" stroke="#fff" stroke-width="2" fill="none"/>
+          <rect x="40" y="146" width="220" height="70" rx="6" fill="#eef4ef" stroke="#cfe6d6"/>
+          <text x="54" y="168" fill="#3a4a40">The revealed content of the</text><text x="54" y="185" fill="#3a4a40">opened item is now visible</text><text x="54" y="202" fill="#3a4a40">on the page.</text>
+          <rect x="40" y="224" width="220" height="34" rx="6" fill="#ffffff" stroke="#e3e7e4"/><text x="54" y="245">▸ Other features</text>
+        </g>
+        <text x="40" y="312" font-size="11.5" fill="#5b6472" font-family="system-ui">Click the accordion so its</text>
+        <text x="40" y="326" font-size="11.5" fill="#5b6472" font-family="system-ui">content shows, THEN mark it.</text>
+        <rect x="316" y="44" width="252" height="286" rx="10" fill="#f7f8f7" stroke="#e3e7e4"/>
+        <rect x="332" y="96" width="220" height="126" rx="8" fill="#eef4ef" stroke="#16a34a" stroke-width="3"/>
+        <g font-size="12" fill="#16181c" font-family="system-ui">
+          <text x="346" y="118" font-weight="700">▾ Logging levels</text>
+          <rect x="346" y="132" width="150" height="9" rx="3" fill="#9aa4ac" opacity=".5"/>
+          <rect x="346" y="150" width="188" height="9" rx="3" fill="#9aa4ac" opacity=".35"/>
+          <rect x="346" y="168" width="176" height="9" rx="3" fill="#9aa4ac" opacity=".35"/>
+          <rect x="346" y="186" width="120" height="9" rx="3" fill="#9aa4ac" opacity=".35"/>
+        </g>
+        <rect x="332" y="72" width="222" height="20" rx="5" fill="#16a34a"/>
+        <text x="341" y="86" font-size="10.5" fill="#fff" font-family="system-ui">✓ selected · press m / Enter to capture</text>
+        <text x="332" y="248" font-size="11.5" fill="#5b6472" font-family="system-ui">Use ↑ / ↓ to fit the outline to</text>
+        <text x="332" y="264" font-size="11.5" fill="#5b6472" font-family="system-ui">the open item, then capture.</text>
+        <rect x="612" y="44" width="224" height="286" rx="10" fill="#f7f8f7" stroke="#e3e7e4"/>
+        <g font-size="11.5" fill="#16181c" font-family="system-ui">
+          <rect x="628" y="62" width="192" height="26" rx="5" fill="#ffffff" stroke="#e3e7e4"/><text x="640" y="79">Overview</text>
+          <rect x="628" y="96" width="192" height="86" rx="5" fill="#ffffff" stroke="#cfe6d6"/>
+          <text x="640" y="115" font-weight="700" fill="#0f7a34">Logging levels</text>
+          <rect x="640" y="126" width="140" height="8" rx="3" fill="#9aa4ac" opacity=".5"/>
+          <rect x="640" y="141" width="170" height="8" rx="3" fill="#9aa4ac" opacity=".35"/>
+          <rect x="640" y="156" width="158" height="8" rx="3" fill="#9aa4ac" opacity=".35"/>
+          <rect x="628" y="190" width="192" height="26" rx="5" fill="#ffffff" stroke="#e3e7e4"/><text x="640" y="207">Other features</text>
+        </g>
+        <text x="628" y="248" font-size="11.5" fill="#5b6472" font-family="system-ui">Full page (automated + mark)</text>
+        <text x="628" y="264" font-size="11.5" fill="#5b6472" font-family="system-ui">drops it back into the page</text>
+        <text x="628" y="280" font-size="11.5" fill="#5b6472" font-family="system-ui">at its own spot.</text>
+      </svg>
+      <figcaption>In <b>Full page (automated + mark)</b> the marked accordion is spliced into the base at its real position. In <b>Mark only</b> it becomes its own section in the stacked PDF.</figcaption>
+    </figure>
+  </div>
+
+  <h2>Worked example ② — tabs (use <kbd>↑</kbd> to grab the header)</h2>
+  <div class="card">
+    <p>A <b>tab widget</b> shows one panel at a time behind a row of tab buttons (the <b>tab bar / header</b>). To capture every tab correctly, each mark must include that header — otherwise every panel looks the same and WebClip can’t tell them apart or place them together.</p>
+    <p><span class="callout">The trick:</span> select a tab’s panel, then press <kbd>↑</kbd> once (or a few times) so the selection grows to also wrap the <b>tab bar</b>. Then capture. Repeat for each tab.</p>
+    <figure>
+      <svg viewBox="0 0 860 380" role="img" aria-label="Select the tab panel, then press up arrow so the selection also includes the tab bar, so WebClip can group the tabs in the right place.">
+        <rect x="0" y="0" width="860" height="380" rx="10" fill="#ffffff" stroke="var(--line)"/>
+        <text x="24" y="28" font-size="15" font-weight="700" fill="#b42318" font-family="system-ui">Panel only — can’t be placed</text>
+        <rect x="24" y="44" width="372" height="250" rx="10" fill="#f7f8f7" stroke="#e3e7e4"/>
+        <g font-size="12" font-family="system-ui">
+          <rect x="44" y="64" width="110" height="30" rx="6" fill="#ffffff" stroke="#e3e7e4"/><text x="66" y="83" fill="#16181c">Levels</text>
+          <rect x="160" y="64" width="110" height="30" rx="6" fill="#eef1ee" stroke="#e3e7e4"/><text x="182" y="83" fill="#5b6472">Control API</text>
+          <rect x="276" y="64" width="96" height="30" rx="6" fill="#eef1ee" stroke="#e3e7e4"/><text x="294" y="83" fill="#5b6472">Features</text>
+        </g>
+        <rect x="40" y="104" width="336" height="118" rx="8" fill="#fff" stroke="#b42318" stroke-width="3" stroke-dasharray="7 5"/>
+        <g font-family="system-ui">
+          <rect x="56" y="122" width="150" height="9" rx="3" fill="#9aa4ac" opacity=".5"/>
+          <rect x="56" y="141" width="286" height="9" rx="3" fill="#9aa4ac" opacity=".35"/>
+          <rect x="56" y="160" width="270" height="9" rx="3" fill="#9aa4ac" opacity=".35"/>
+          <rect x="56" y="179" width="210" height="9" rx="3" fill="#9aa4ac" opacity=".35"/>
+        </g>
+        <text x="40" y="248" font-size="11.5" fill="#b42318" font-family="system-ui">The tab bar is OUTSIDE the selection, so</text>
+        <text x="40" y="264" font-size="11.5" fill="#b42318" font-family="system-ui">every tab looks the same — the panels</text>
+        <text x="40" y="280" font-size="11.5" fill="#b42318" font-family="system-ui">can’t be grouped to the widget’s spot.</text>
+        <rect x="404" y="150" width="52" height="30" rx="6" fill="#111418"/><text x="430" y="171" text-anchor="middle" font-size="15" fill="#fff" font-weight="700" font-family="system-ui">↑</text>
+        <text x="430" y="196" text-anchor="middle" font-size="11" fill="#5b6472" font-family="system-ui">press</text>
+        <text x="464" y="28" font-size="15" font-weight="700" fill="#0f7a34" font-family="system-ui">Press ↑ — header + panel ✓</text>
+        <rect x="464" y="44" width="372" height="250" rx="10" fill="#f7f8f7" stroke="#e3e7e4"/>
+        <rect x="480" y="54" width="340" height="176" rx="9" fill="#eef4ef" stroke="#16a34a" stroke-width="3"/>
+        <g font-size="12" font-family="system-ui">
+          <rect x="496" y="66" width="104" height="28" rx="6" fill="#ffffff" stroke="#cfe6d6"/><text x="516" y="84" fill="#0f7a34" font-weight="700">Levels</text>
+          <rect x="606" y="66" width="104" height="28" rx="6" fill="#ffffff" stroke="#e3e7e4"/><text x="626" y="84" fill="#5b6472">Control API</text>
+          <rect x="716" y="66" width="90" height="28" rx="6" fill="#ffffff" stroke="#e3e7e4"/><text x="734" y="84" fill="#5b6472">Features</text>
+        </g>
+        <g font-family="system-ui">
+          <rect x="496" y="106" width="150" height="9" rx="3" fill="#9aa4ac" opacity=".5"/>
+          <rect x="496" y="125" width="300" height="9" rx="3" fill="#9aa4ac" opacity=".35"/>
+          <rect x="496" y="144" width="284" height="9" rx="3" fill="#9aa4ac" opacity=".35"/>
+          <rect x="496" y="163" width="220" height="9" rx="3" fill="#9aa4ac" opacity=".35"/>
+        </g>
+        <rect x="480" y="34" width="252" height="20" rx="5" fill="#16a34a"/>
+        <text x="489" y="48" font-size="10.5" fill="#fff" font-family="system-ui">✓ tab bar + panel · now capture (m / Enter)</text>
+        <text x="464" y="252" font-size="11.5" fill="#5b6472" font-family="system-ui">Including the tab bar lets WebClip find the widget</text>
+        <text x="464" y="268" font-size="11.5" fill="#5b6472" font-family="system-ui">and stack every tab in order, in the right place.</text>
+        <text x="464" y="284" font-size="11.5" fill="#5b6472" font-family="system-ui">Repeat: switch tab → mark → ↑ → capture.</text>
+      </svg>
+    </figure>
+    <ol class="steps">
+      <li><b>Mark a tab’s content.</b> Arm marking (<kbd>m</kbd>), aim at the visible panel, click to select it.</li>
+      <li><b>Grow to the header.</b> Press <kbd>↑</kbd> until the outline wraps the <b>tab bar</b> (buttons) as well as the panel. <kbd>↓</kbd> shrinks back if you overshoot.</li>
+      <li><b>Capture, then next tab.</b> Press <kbd>m</kbd> / <kbd>Enter</kbd>. Switch to the next tab on the page and repeat. <b>Do the default (first) tab too</b>, the same way.</li>
+    </ol>
+    <p class="muted">Because every tab of a widget is marked <i>with its header</i>, <b>Full page</b> recognises they belong together and stacks them at the widget’s place in the page — in the order you captured them.</p>
+  </div>
+
+  <h2>The floating toolbar</h2>
+  <div class="card">
+    <figure>
+      <svg viewBox="0 0 620 74" role="img" aria-label="The floating toolbar: Mark, count, Undo, Done, close">
+        <rect x="104" y="16" width="410" height="42" rx="10" fill="#14161a"/>
+        <rect x="116" y="26" width="98" height="22" rx="6" fill="var(--accent)"/>
+        <text x="165" y="41" text-anchor="middle" fill="#fff" font-size="12" font-family="system-ui">🎯 Mark (m)</text>
+        <text x="228" y="41" text-anchor="start" fill="#cfd6dd" font-size="12" font-family="system-ui">2 captured</text>
+        <rect x="308" y="26" width="66" height="22" rx="6" fill="#8a5a00"/>
+        <text x="341" y="41" text-anchor="middle" fill="#fff" font-size="12" font-family="system-ui">↶ Undo</text>
+        <rect x="382" y="26" width="66" height="22" rx="6" fill="#1a7f37"/>
+        <text x="415" y="41" text-anchor="middle" fill="#fff" font-size="12" font-family="system-ui">✓ Done</text>
+        <rect x="456" y="26" width="26" height="22" rx="6" fill="#555"/>
+        <text x="469" y="41" text-anchor="middle" fill="#fff" font-size="12" font-family="system-ui">✕</text>
+      </svg>
+    </figure>
+    <p><b>Count</b> shows how many sections you’ve captured. <b>↶ Undo</b> drops the last one (after a wrong mark — the rest are safe). <b>✓ Done</b> assembles everything into the PDF. <b>✕</b> cancels the whole session.</p>
+  </div>
+
+  <h2>Split PDF — re-paginate a saved capture</h2>
+  <div class="card">
+    <p>A one-click <b>Capture &amp; Save</b> (or a <b>Full page</b> capture) gives you <b>Auto</b> output: one continuous page that reads like the screen. When you want it on <b>paper</b>, use <b>Split PDF</b> (options page ⚙) to turn that saved capture into printable <b>A4</b> or <b>Letter</b> pages — a clean PDF-to-PDF operation, no re-capture.</p>
+    <p>The breaks are <b>content-aware</b>: WebClip carries a whitespace map inside every capture it makes, so each page break lands in the gap <b>between</b> lines, paragraphs, or rows — it never slices through a line, a table row, or a coloured block.</p>
+    <p class="muted"><b>Best results:</b> split a capture made with the <b>current version</b> — the whitespace map is embedded at capture time. A PDF from another tool (or a very old WebClip build) has no map, so Split PDF falls back to fixed page heights that can cut a line; re-capture the page first for clean breaks.</p>
+  </div>
+
+  <h2>Keyboard shortcuts</h2>
+  <div class="card">
+    <table class="keys">
+      <tr><td><kbd>m</kbd></td><td>Start marking; press again to <b>capture</b> the selected section.</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>Capture the selected section.</td></tr>
+      <tr><td><kbd>↑</kbd> / <kbd>↓</kbd></td><td>Grow / shrink the selection to get exactly the section you want.</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Cancel marking (nothing is captured).</td></tr>
+      <tr><td><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Z</kbd></td><td>Undo the last capture.</td></tr>
+    </table>
+    <p class="muted">Shortcuts use an <b>English keyboard layout</b> — switch layout if the keys don’t respond, or just use the toolbar buttons.</p>
+  </div>
+
+  <h2>Tips</h2>
+  <div class="card">
+    <p><b>Which tool?</b> If it’s all on the page, use <b>Capture &amp; Save</b>. If content hides behind accordions or tabs, use <b>Full page</b> and mark those. If you only want specific parts (or across several lessons), use <b>Mark only</b>.</p>
+    <p><b>Accordions.</b> Open the section first so its content shows, then mark it (see <i>Worked example ①</i> above). Marking grabs exactly the block you point at, so the sidebar and “Exit course” chrome stay out.</p>
+    <p><b>Tabs.</b> Mark the panel, then press <kbd>↑</kbd> so the selection includes the <b>tab bar</b> too, and repeat for each tab (see <i>Worked example ②</i>). That’s what lets the tabs land together in the right place.</p>
+    <p><b>Across lessons.</b> In <b>Mark only</b>, keep marking as you navigate to the next lesson — captures pile up and <b>Done</b> makes a single multi-page PDF.</p>
+    <p><b>Stamp.</b> Turn on the stamp in Settings to add a title header and a footer (URL · capture time · page N/M) to every capture, including Full page + mark and Mark only.</p>
+    <p><b>While capturing, scrolling is locked</b> so the page can’t shift mid-shot. That’s expected — it releases the moment the capture finishes.</p>
+  </div>
+
+  <footer>
+    <p>WebClip · privacy-first, on-device capture. No page data leaves your browser.</p>
+    <p>Built by <b>Andrew P. Michelis</b> (KnackMentor) · Licensed under <b>Apache-2.0</b>.<br />
+    For more details, source, and issues, visit the <a href="https://github.com/andrewmichelis/webclip">WebClip GitHub page</a> · <a href="https://knackmentor.com/webclip/">knackmentor.com/webclip</a></p>
+  </footer>
+</div>
+</body>
+</html>

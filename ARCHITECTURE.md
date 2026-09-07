@@ -29,7 +29,8 @@ src/
 
 - **Popup (`src/popup`)** — the UI. It reads the active tab, lets the user choose *full page* vs
   *visible area* and *Auto* vs *A4 / Letter*, and sends a `START_CAPTURE` message to the service
-  worker. It also drives "pick a section" and "split a saved PDF".
+  worker. It also drives "pick a section", "mark and assemble" (mark several regions across a page,
+  expanding accordions or switching tabs, and stitch them into one PDF), and "split a saved PDF".
 - **Service worker (`src/background`)** — the orchestrator. It resolves and re-verifies the active
   tab, injects the page controller, runs the capture loop, hands tiles to the renderer, saves the
   output, and guarantees page restoration. MV3 workers can be suspended, so it holds no durable state
@@ -39,7 +40,8 @@ src/
   long capture, optional declutter), reports geometry, and restores every change idempotently.
 - **Renderer (`src/renderer`)** — turns captured tiles into a PDF with `pdf-lib`: composites the
   column, paginates it, carries page links across as annotations, and writes the optional evidence
-  stamp.
+  stamp. For a marked capture it assembles the marked regions onto the base page in capture order
+  (the "atlas"), splicing each at its measured position.
 - **Shared (`src/shared`)** — pure functions with no DOM, unit-tested in isolation: capture planning
   (which scroll positions to visit, how to map screen pixels to document pixels), tile overlap math,
   safe filename generation, settings validation, and the shared message/type contracts.

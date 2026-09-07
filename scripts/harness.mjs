@@ -69,7 +69,7 @@ try {
     // Ensure the fixture tab is the active tab, then trigger capture from the popup context.
     const popup = await ctx.newPage();
     await popup.goto(`chrome-extension://${extId}/popup.html`, { waitUntil: 'load' });
-    // Re-activate the fixture tab (opening the popup page stole focus) so the capture targets it.
+    // Re-activate the fixture tab (opening the popup page stole focus) so the screenshot targets it.
     await sw.evaluate(async (url) => {
       const [t] = await chrome.tabs.query({ url });
       if (t) await chrome.tabs.update(t.id, { active: true });

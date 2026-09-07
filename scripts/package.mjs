@@ -101,4 +101,4 @@ eocd.writeUInt16LE(0, 20);          // comment length
 const zip = Buffer.concat([...local, cd, eocd]);
 await writeFile(resolve(root, outName), zip);
 console.log(`packaged ${files.length} files -> ${outName}  (${(zip.length / 1024).toFixed(1)} KB)`);
-console.log('Upload this zip at https://chrome.google.com/webstore/devconsole (see docs Chrome Web Store protocol).');
+console.log('Upload this zip at the Chrome Web Store Developer Dashboard: https://chrome.google.com/webstore/devconsole');

@@ -1,4 +1,4 @@
-// Deterministic, safe filename generation. Pure functions (unit-tested).
+// Deterministic, safe filename generation (handover §35). Pure functions (unit-tested).
 
 export interface FilenameParts {
   domain: string;

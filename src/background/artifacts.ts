@@ -1,6 +1,6 @@
-// Output artifacts: the PDF plus optional Evidence Mode sidecars.
-// SHA-256 is detached (never embedded in the PDF it hashes). The JSON manifest records
-// source + capture metadata and is explicit that the local clock is not a trusted timestamp.
+// Output artifacts: the PDF plus optional Evidence Mode sidecars (WC-M7 brought forward).
+// SHA-256 is detached (never embedded in the PDF it hashes, §30). The JSON manifest records
+// source + capture metadata and is explicit that the local clock is not a trusted timestamp (§33).
 import { downloadPdf, downloadText } from './downloads.js';
 import { PRODUCT_NAME, VERSION } from '../shared/constants.js';
 import type { UserSettings, CaptureMode } from '../shared/types.js';
@@ -26,7 +26,7 @@ export interface EvidenceStamp {
 
 /**
  * Save the PDF and, if enabled, a `.sha256` checksum sidecar and/or a JSON evidence manifest.
- * Deterministic download order: PDF, then checksum, then manifest.
+ * Deterministic download order: PDF, then checksum, then manifest (§36).
  */
 export async function saveArtifacts(
   pdfBytes: Uint8Array,

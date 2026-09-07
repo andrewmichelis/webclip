@@ -1,6 +1,6 @@
 {
   "name": "webclip",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Capture the rendered active webpage to a screenshot-based PDF (Chrome MV3 extension).",
   "type": "module",

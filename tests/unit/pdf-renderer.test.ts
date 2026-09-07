@@ -9,6 +9,8 @@ import {
   linkRectForPage,
   sanitizeLinkUrl,
   pdfUriHexString,
+  detectBackground,
+  frozenBandBackground,
 } from '../../src/renderer/pdf-renderer.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -39,7 +41,7 @@ describe('renderImageToPdfBytes', () => {
 });
 
 describe('pageContentGeometry', () => {
-  it('sanitizeLinkUrl allows safe schemes and rejects dangerous / malformed ones (URL sink)', () => {
+  it('sanitizeLinkUrl allows safe schemes and rejects dangerous / malformed ones (T-1 sink)', () => {
     expect(sanitizeLinkUrl('https://example.com/a')).toBe('https://example.com/a');
     expect(sanitizeLinkUrl('  http://x.io  ')).toBe('http://x.io'); // trimmed
     expect(sanitizeLinkUrl('mailto:a@b.com')).toBe('mailto:a@b.com');
@@ -93,14 +95,14 @@ describe('pageContentGeometry', () => {
 });
 
 // Regression guard for the "links not clickable" bug: the /URI must be a delimiter-proof HEX string
-// and decode to the plain URL bytes (clickable). PDFHexString.fromText emits UTF-16BE with a
+// (T-1) AND decode to the plain URL bytes (clickable). PDFHexString.fromText emits UTF-16BE with a
 // FEFF BOM that viewers won't parse as a URI — these tests fail loudly if that form ever returns.
-describe('clickable link annotations (injection-safe + viewer-parseable)', () => {
+describe('clickable link annotations (T-1 safe + viewer-parseable)', () => {
   const urls = [
     'https://example.com/a?b=1&c=2',
     'https://en.wikipedia.org/wiki/Foo_(disambiguation)', // legitimately contains ( )
     'mailto:hello@knackmentor.com',
-    'https://x.test/a)/S/JavaScript/JS(app.alert(1))(', // injection payload, must survive verbatim
+    'https://x.test/a)/S/JavaScript/JS(app.alert(1))(', // T-1 injection payload, must survive verbatim
   ];
 
   it('pdfUriHexString round-trips to the exact URL with no UTF-16 BOM', () => {
@@ -110,7 +112,7 @@ describe('clickable link annotations (injection-safe + viewer-parseable)', () =>
       const raw = hex.toString(); // "<..hex..>"
       expect(raw.toLowerCase().startsWith('<feff')).toBe(false); // NOT UTF-16BE (the regression)
       expect(decodeHexString(hex)).toBe(url); // viewer reads back the exact URL
-      // hex digits only -> no (, ), or \ can appear -> cannot break out of the PDF string
+      // hex digits only -> no (, ), or \ can appear -> cannot break out of the PDF string (T-1)
       expect(raw.slice(1, -1)).toMatch(/^[0-9a-fA-F]*$/);
     }
   });
@@ -118,4 +120,38 @@ describe('clickable link annotations (injection-safe + viewer-parseable)', () =>
   // Note: the full renderFullPagePdf path needs createImageBitmap (browser-only), so the wired
   // annotation is exercised end-to-end by the headless harness (scripts/harness.mjs) + verify-pdf,
   // which now decode every /URI and fail on a UTF-16 BOM or bad scheme. Here we lock the encoder.
+});
+
+// Regression guard (operator 2026-09-06, Wind River "Introducing Zephyr Essentials" default full-page PDF —
+// "the same problem everywhere"): the frozen-band background estimate mis-read a light page as dark and
+// mis-detected a FROZEN FOOTER, whose skipBottom collapsed every seam's overlap → content doubled at each fold.
+// Root: a light page background spread across several near-white shades splits into several /8 buckets, EACH
+// smaller than one solid dark hero/CTA block, so the dark block wins the vote even over the whole tile. Fix:
+// frozenBandBackground quantizes COARSELY (/32, bucket-centred) so the near-white shades merge into the light
+// majority. Teeth: build exactly that pixel mix and assert the naive /8 estimate reads a near-white pixel as
+// INK (the false footer) while frozenBandBackground reads it as background. Revert the mask to /8 → this fails.
+describe('frozenBandBackground (dark-hero false-footer root)', () => {
+  const W = 64, H = 64;
+  // A tile-0-like region: 37% solid dark hero (a plurality), 63% light background split across FOUR near-white
+  // shades — each in a different /8 bucket (0xe0/0xe8/0xf0/0xf8) but all inside ONE /32 bucket (0xe0).
+  const buf = new Uint8ClampedArray(W * H * 4);
+  const shades = [0x26 /* dark hero */, 0xe4, 0xec, 0xf4, 0xfc];
+  for (let y = 0; y < H; y++) {
+    // rows 0..23 dark (24/64 ≈ 37%); rows 24..63 cycle the four light shades (10 rows each ≈ 63% total)
+    const v = y < 24 ? shades[0] : shades[1 + (Math.floor((y - 24) / 10) % 4)];
+    for (let x = 0; x < W; x++) { const o = (y * W + x) * 4; buf[o] = buf[o + 1] = buf[o + 2] = v; buf[o + 3] = 255; }
+  }
+  const inkAgainst = (bg: number[], c = 245): boolean => Math.abs(c - bg[0]) + Math.abs(c - bg[1]) + Math.abs(c - bg[2]) > 50;
+
+  it('the naive /8 estimate is fooled: the dark hero out-votes the fragmented light background', () => {
+    const bg8 = detectBackground(buf, W, H); // default /8 — the pre-fix behaviour
+    expect(bg8[0]).toBeLessThan(64); // picks the dark hero
+    expect(inkAgainst(bg8)).toBe(true); // → a near-white (245) pixel reads as INK → false frozen footer
+  });
+
+  it('frozenBandBackground merges the shades to the true light majority (no false footer)', () => {
+    const bg = frozenBandBackground(buf, W, H);
+    expect(bg[0]).toBeGreaterThanOrEqual(224); // light background wins
+    expect(inkAgainst(bg)).toBe(false); // → a near-white (245) pixel is background, not ink → footerH = 0
+  });
 });

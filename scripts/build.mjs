@@ -1,7 +1,7 @@
 // WebClip build — bundles the MV3 extension into dist/ with esbuild.
-// No runtime CDN, no remote code. Entry points are bundled self-contained
+// No runtime CDN, no remote code (ARCH-WC-03). Entry points are bundled self-contained
 // (MV3 service workers do not support code-splitting). Version is injected from package.json
-// so the product version has a single source.
+// so the product version has a single source (ARCH-WC-13).
 import { build } from 'esbuild';
 import { readFile, writeFile, rm, mkdir, cp } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -49,7 +49,7 @@ await build({
 });
 
 // 2. Copy static UI assets
-for (const f of ['popup/popup.html', 'popup/popup.css', 'options/options.html', 'options/options.css']) {
+for (const f of ['popup/popup.html', 'popup/popup.css', 'options/options.html', 'options/options.css', 'help/help.html']) {
   const base = f.split('/').pop();
   await cp(resolve(src, f), resolve(dist, base));
 }

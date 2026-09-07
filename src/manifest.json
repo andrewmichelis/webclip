@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "WebClip",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Capture the rendered active webpage and save it as a screenshot-based PDF.",
   "action": {
     "default_title": "Capture page with WebClip",
