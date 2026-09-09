@@ -1,0 +1,49 @@
+name: Bug report
+description: Report something that isn't working
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: page-url
+    attributes:
+      label: Page URL where it happened
+      description: The web page you were capturing when the problem occurred (omit if private).
+    validations:
+      required: false
+  - type: dropdown
+    id: capture-mode
+    attributes:
+      label: Capture mode
+      description: Which capture mode were you using?
+      options:
+        - visible
+        - full-page
+        - section
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Which version are you running?
+    validations:
+      required: false
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, browser, or runtime, as relevant.
+    validations:
+      required: false
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: false

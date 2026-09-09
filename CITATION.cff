@@ -12,8 +12,8 @@ authors:
     given-names: Andrew P.
     email: andrew.michelis@knackmentor.com
     affiliation: KnackMentor
-version: 1.0.0
-date-released: 2026-08-18
+version: 1.1.0
+date-released: 2026-09-09
 license: Apache-2.0
 repository-code: "https://github.com/andrewmichelis/webclip"
 url: "https://knackmentor.com"

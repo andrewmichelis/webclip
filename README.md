@@ -14,6 +14,7 @@
 </p>
 
 <p align="center">
+  <a href="https://chromewebstore.google.com/detail/webclip/dafdhiehgfnehhbcofbepgcfcgkgdcce"><img src="https://img.shields.io/badge/Chrome_Web_Store-Install-4f86ff?logo=googlechrome&logoColor=white" alt="Install from the Chrome Web Store" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache 2.0" /></a>
   <img src="https://img.shields.io/badge/Chrome-Manifest_V3-4f86ff" alt="Chrome Manifest V3" />
   <img src="https://img.shields.io/badge/privacy-local--only-1a7f37" alt="Privacy: local-only" />
@@ -21,7 +22,11 @@
 </p>
 
 <p align="center">
-  <strong><a href="https://knackmentor.com/webclip/">Home &amp; try it → knackmentor.com/webclip</a></strong>
+  <strong><a href="https://chromewebstore.google.com/detail/webclip/dafdhiehgfnehhbcofbepgcfcgkgdcce">Install from the Chrome Web Store →</a></strong>
+</p>
+
+<p align="center">
+  <a href="https://knackmentor.com/webclip/">Home &amp; try it → knackmentor.com/webclip</a>
 </p>
 
 <p align="center">
@@ -122,6 +127,20 @@ npm run build        # bundle into dist/
 ```
 
 Please keep changes covered by tests, and preserve the permission set above (it is a hard constraint, not a preference).
+
+## Related tools
+
+Part of a small suite of open tools by [Andrew Michelis](https://knackmentor.com). See them all at **[knackmentor.com/work](https://knackmentor.com/work/)**.
+
+- **[av-integrity](https://github.com/andrewmichelis/av-integrity)**: detect when a vehicle's sensors are lying (an open AV sensor-fusion and integrity monitor).
+- **[Markdown Desk](https://github.com/andrewmichelis/markdown-desk)**: a single-file browser app for reading and working with Markdown.
+- **[HashTag Language](https://github.com/andrewmichelis/hashtag-lang)**: a small notation for facts, queries, and provenance (the shared substrate these tools speak).
+
+<sub>Built in the open, verified before shipping. The standard behind [KnackMentor](https://knackmentor.com).</sub>
+
+## Verifying a release
+
+Every release is tagged and signed under the author's key, and the full source is public here, so you can build from source and compare. Authorship and first-conception are independently timestamped (RFC-3161 / OpenTimestamps) as part of the author's provenance process. Release-artifact attestation via [Sigstore](https://www.sigstore.dev/) is planned. Any certification or curation offered on top stays opt-in, self-hosting is always allowed, and there is no certificate authority you are required to trust.
 
 ## License
 

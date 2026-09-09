@@ -64,3 +64,5 @@ production-dependency audit, a manifest-permission check that fails on anything 
 permissions above, and a headless browser harness that captures a real page and verifies the output
 PDF (including that every link is both injection-safe and actually clickable). See
 [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+See also **"Verifying a release"** in the [README](README.md) for release provenance and authenticity.

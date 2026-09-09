@@ -947,7 +947,7 @@ async function paginateColumnWithBreaks(
 /**
  * Lay clickable link annotations for an image-stacked column (Mark / atlas / modal). `columnLinks` are in
  * the column's native image px (top-left origin, x already offset by any per-piece centering). Fail-safe
- * (IUX-14): a mapping error drops the annotations but never corrupts the image PDF — the baseline capture
+ * by design: a mapping error drops the annotations but never corrupts the image PDF — the baseline capture
  * is guaranteed, links are the bonus. Reuses the tested `linkRectForPage` + `addLinksToPage` primitives.
  */
 function layColumnLinks(
